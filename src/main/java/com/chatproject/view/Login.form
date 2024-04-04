@@ -148,6 +148,11 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem2ActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem3">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Issues"/>
+              </Properties>
+            </MenuItem>
           </SubComponents>
         </Menu>
       </SubComponents>
@@ -203,7 +208,7 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="loginBtn" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="85" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
@@ -214,7 +219,7 @@
                           <Component id="jButton2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="jButton3" max="32767" attributes="0"/>
-                      <Component id="jButton4" alignment="0" max="32767" attributes="0"/>
+                      <Component id="guestLogBtn" alignment="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -234,7 +239,7 @@
                           <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                          <Component id="loginBtn" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -242,7 +247,7 @@
                   </Group>
                   <Component id="jButton3" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jButton4" min="-2" max="-2" attributes="0"/>
+                  <Component id="guestLogBtn" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -251,23 +256,22 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/com/chatproject/assets/noned_x4.png"/>
-            </Property>
             <Property name="text" type="java.lang.String" value="jLabel1"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextField1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jTextField1"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="&quot;&quot;" type="code"/>
+            </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new PlaceholderTextField(&quot;T&#xea;n &#x111;&#x103;ng nh&#x1ead;p&quot;)"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JPasswordField" name="jPasswordField1">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="jPasswordField1"/>
-          </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton1">
+        <Component class="javax.swing.JButton" name="loginBtn">
           <Properties>
             <Property name="text" type="java.lang.String" value="Qu&#xea;n m&#x1ead;t kh&#x1ea9;u ?"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -276,7 +280,7 @@
             <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loginBtnActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButton2">
@@ -292,12 +296,12 @@
             <Property name="text" type="java.lang.String" value="T&#x1ea1;o t&#xe0;i kho&#x1ea3;n m&#x1edb;i"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton4">
+        <Component class="javax.swing.JButton" name="guestLogBtn">
           <Properties>
             <Property name="text" type="java.lang.String" value="&#x110;&#x103;ng nh&#x1ead;p kh&#xe1;ch"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton4ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="guestLogBtnActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">

@@ -13,6 +13,8 @@ import java.net.URI;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import static com.chatproject.controller.LoginHandler.NonFunction;
+
 /**
  *
  * @author hungl
@@ -23,7 +25,8 @@ public class Login extends javax.swing.JFrame {
      * Creates new form Login
      */
     
-    public String Github_repo = "https://github.com/Gawasna/Chatproject";
+    public static String REPO_LINK = "https://github.com/Gawasna/Chatproject";
+    public static String ISSUE_LINK = "https://github.com/Gawasna/Chatproject/issues";
     public String Resources_File_Path = "src\\main\\java\\com\\chatproject\\info\\resources.txt";
     public static String DEFAULT_LAF = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
     public Login() {
@@ -49,18 +52,19 @@ public class Login extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        jTextField1 = new PlaceholderTextField("Tên đăng nhập");
         jPasswordField1 = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
+        loginBtn = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        guestLogBtn = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
         jDialog1.setTitle("Resources");
         jDialog1.setBounds(new java.awt.Rectangle(0, 0, 400, 600));
@@ -131,19 +135,16 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chatproject/assets/noned_x4.png"))); // NOI18N
         jLabel1.setText("jLabel1");
 
-        jTextField1.setText("jTextField1");
+        jTextField1.setText("");
 
-        jPasswordField1.setText("jPasswordField1");
-
-        jButton1.setText("Quên mật khẩu ?");
-        jButton1.setBorder(null);
-        jButton1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        loginBtn.setText("Quên mật khẩu ?");
+        loginBtn.setBorder(null);
+        loginBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        loginBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                loginBtnActionPerformed(evt);
             }
         });
 
@@ -156,10 +157,10 @@ public class Login extends javax.swing.JFrame {
 
         jButton3.setText("Tạo tài khoản mới");
 
-        jButton4.setText("Đăng nhập khách");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        guestLogBtn.setText("Đăng nhập khách");
+        guestLogBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                guestLogBtnActionPerformed(evt);
             }
         });
 
@@ -179,14 +180,14 @@ public class Login extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton1)
+                                .addComponent(loginBtn)
                                 .addGap(85, 85, 85))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(26, 26, 26)))
                         .addComponent(jButton2))
                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(guestLogBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -202,13 +203,13 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(jButton2)
                         .addGap(20, 20, 20))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(loginBtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4)
+                .addComponent(guestLogBtn)
                 .addContainerGap())
         );
 
@@ -232,6 +233,9 @@ public class Login extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jMenuItem2);
+
+        jMenuItem3.setText("Issues");
+        jMenu2.add(jMenuItem3);
 
         jMenuBar1.add(jMenu2);
 
@@ -257,7 +261,7 @@ public class Login extends javax.swing.JFrame {
         if (Desktop.isDesktopSupported()) {
             Desktop desktop = Desktop.getDesktop();
             try {
-                desktop.browse(new URI(Github_repo));
+                desktop.browse(new URI(REPO_LINK));
             } catch (Exception e) {
             }
         } else {
@@ -292,18 +296,19 @@ public class Login extends javax.swing.JFrame {
         jDialog1.setVisible(true);
         ReadResourcesInProject();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    
+    //NonFunction() = tính năng chưa làm
+    private void guestLogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guestLogBtnActionPerformed
+       NonFunction();
+    }//GEN-LAST:event_guestLogBtnActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
+        NonFunction();
+    }//GEN-LAST:event_loginBtnActionPerformed
     
     /**
      * @param args the command line arguments
@@ -329,10 +334,9 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton guestLogBtn;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JDialog jDialog2;
@@ -344,6 +348,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPasswordField jPasswordField1;
@@ -351,5 +356,6 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JButton loginBtn;
     // End of variables declaration//GEN-END:variables
 }
