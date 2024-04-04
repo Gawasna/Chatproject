@@ -309,6 +309,7 @@ public class Login extends javax.swing.JFrame {
 
     private void LoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBtnActionPerformed
         // TODO add your handling code here:
+        //kiểm tra cú pháp đăng nhập và tài khoản , hợp lệ thì thực hiện
     }//GEN-LAST:event_LoginBtnActionPerformed
 
     private void forgotPassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forgotPassBtnActionPerformed
