@@ -8,6 +8,6 @@ package com.chatproject.controller;
  *
  * @author hungl
  */
-public class BaseController {
-    //kiểm tra tài khoản trên database
+public class Sever {
+    
 }
