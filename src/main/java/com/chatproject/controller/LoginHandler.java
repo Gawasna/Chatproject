@@ -22,11 +22,11 @@ public class LoginHandler {
     //method kiểm tra 3 điều kiện
 
     //Kiểm tra đăng nhập hợp lệ
-    public boolean CheckVaildInput() {
+    /*public boolean CheckVaildInput() {
         if (FillEnough == true || TrueTypeInput == true || AccountCheck==true) {
             return true;
         } else {
         return false;
         }
-    }
+    }*/
 }

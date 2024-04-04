@@ -4,36 +4,33 @@
  */
 package com.chatproject.view;
 
+/**
+ *
+ * @author hungl
+ */
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import javax.swing.JTextField;
+import javax.swing.JPasswordField;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
-/**
- *
- * @author hungl
- */
-
-//Class PlaceHolder
-class PlaceholderTextField extends JTextField implements FocusListener, CaretListener {
+// Lớp PlaceHolder cho JPasswordField
+class PlaceholderPasswordField extends JPasswordField implements FocusListener, CaretListener {
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private String placeholder;
     private boolean isPlaceholderVisible = true;
-    public PlaceholderTextField(String placeholder) {
+    
+    public PlaceholderPasswordField(String placeholder) {
         this.placeholder = placeholder;
         addCaretListener(this);
     }
 
-    PlaceholderTextField() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -48,21 +45,24 @@ class PlaceholderTextField extends JTextField implements FocusListener, CaretLis
             g.drawString(placeholder, x, y);
         }
     }
+
     @Override
     public void focusGained(FocusEvent e) {
         isPlaceholderVisible = false;
         repaint();
     }
+
     @Override
     public void focusLost(FocusEvent e) {
-        if (getText().isEmpty()) {
+        if (getPassword().length == 0) {
             isPlaceholderVisible = true;
             repaint();
         }
     }
+
     @Override
     public void caretUpdate(CaretEvent e) {
-        if (getText().isEmpty()) {
+        if (getPassword().length == 0) {
             isPlaceholderVisible = true;
         } else {
             isPlaceholderVisible = false;

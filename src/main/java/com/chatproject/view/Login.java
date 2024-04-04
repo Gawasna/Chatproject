@@ -52,19 +52,19 @@ public class Login extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new PlaceholderTextField("Tên đăng nhập");
-        jPasswordField1 = new javax.swing.JPasswordField();
-        loginBtn = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        userfield = new PlaceholderTextField("Tên đăng nhập");
+        passwordfield = new PlaceholderPasswordField("Mật khẩu");
+        forgotPassBtn = new javax.swing.JButton();
+        LoginBtn = new javax.swing.JButton();
+        registerBtn = new javax.swing.JButton();
         guestLogBtn = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        githubBtn = new javax.swing.JMenuItem();
+        resBtn = new javax.swing.JMenuItem();
+        issuesBtn = new javax.swing.JMenuItem();
 
         jDialog1.setTitle("Resources");
         jDialog1.setBounds(new java.awt.Rectangle(0, 0, 400, 600));
@@ -137,25 +137,30 @@ public class Login extends javax.swing.JFrame {
 
         jLabel1.setText("jLabel1");
 
-        jTextField1.setText("");
-
-        loginBtn.setText("Quên mật khẩu ?");
-        loginBtn.setBorder(null);
-        loginBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        loginBtn.addActionListener(new java.awt.event.ActionListener() {
+        userfield.setText("");
+        userfield.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginBtnActionPerformed(evt);
+                userfieldActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Đăng nhập");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        forgotPassBtn.setText("Quên mật khẩu ?");
+        forgotPassBtn.setBorder(null);
+        forgotPassBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        forgotPassBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                forgotPassBtnActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Tạo tài khoản mới");
+        LoginBtn.setText("Đăng nhập");
+        LoginBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LoginBtnActionPerformed(evt);
+            }
+        });
+
+        registerBtn.setText("Tạo tài khoản mới");
 
         guestLogBtn.setText("Đăng nhập khách");
         guestLogBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -175,18 +180,18 @@ public class Login extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(69, 69, 69)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField1)
-                    .addComponent(jPasswordField1)
+                    .addComponent(userfield)
+                    .addComponent(passwordfield)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(loginBtn)
+                                .addComponent(forgotPassBtn)
                                 .addGap(85, 85, 85))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(26, 26, 26)))
-                        .addComponent(jButton2))
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(LoginBtn))
+                    .addComponent(registerBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(guestLogBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
@@ -194,20 +199,20 @@ public class Login extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(userfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(6, 6, 6)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(passwordfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(6, 6, 6)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(LoginBtn)
                         .addGap(20, 20, 20))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(loginBtn)
+                        .addComponent(forgotPassBtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addComponent(jButton3)
+                .addComponent(registerBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(guestLogBtn)
                 .addContainerGap())
@@ -218,24 +223,24 @@ public class Login extends javax.swing.JFrame {
 
         jMenu2.setText("About");
 
-        jMenuItem1.setText("Github");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        githubBtn.setText("Github");
+        githubBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                githubBtnActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem1);
+        jMenu2.add(githubBtn);
 
-        jMenuItem2.setText("Resources");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        resBtn.setText("Resources");
+        resBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                resBtnActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem2);
+        jMenu2.add(resBtn);
 
-        jMenuItem3.setText("Issues");
-        jMenu2.add(jMenuItem3);
+        issuesBtn.setText("Issues");
+        jMenu2.add(issuesBtn);
 
         jMenuBar1.add(jMenu2);
 
@@ -269,9 +274,9 @@ public class Login extends javax.swing.JFrame {
         }
     }
     
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void githubBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_githubBtnActionPerformed
         OpenRepoLink();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_githubBtnActionPerformed
     
     private void ReadResourcesInProject() {
     try {
@@ -292,23 +297,50 @@ public class Login extends javax.swing.JFrame {
     }
 }
     
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void resBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resBtnActionPerformed
         jDialog1.setVisible(true);
         ReadResourcesInProject();
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_resBtnActionPerformed
     
     //NonFunction() = tính năng chưa làm
     private void guestLogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guestLogBtnActionPerformed
        NonFunction();
     }//GEN-LAST:event_guestLogBtnActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void LoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_LoginBtnActionPerformed
 
-    private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
+    private void forgotPassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forgotPassBtnActionPerformed
         NonFunction();
-    }//GEN-LAST:event_loginBtnActionPerformed
+    }//GEN-LAST:event_forgotPassBtnActionPerformed
+
+    private void userfieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userfieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_userfieldActionPerformed
+    
+    public boolean checkLoginSyntax(String username, String password) {
+    // Kiểm tra xem đã nhập đủ thông tin tài khoản và mật khẩu chưa
+    if (username.isEmpty() || password.isEmpty()) {
+        System.out.println("Vui lòng nhập đầy đủ tên tài khoản và mật khẩu.");
+        return false;
+    }
+
+    // Kiểm tra cú pháp của tên tài khoản
+    if (username.length() < 5 || username.contains(" ") || !username.matches("[a-zA-Z0-9]+")) {
+        System.out.println("Tên tài khoản không hợp lệ. Tên tài khoản phải có ít nhất 5 ký tự, không chứa kí tự đặc biệt và không có dấu cách.");
+        return false;
+    }
+
+    // Kiểm tra cú pháp của mật khẩu
+    if (password.length() < 8 || password.contains(" ")) {
+        System.out.println("Mật khẩu không hợp lệ. Mật khẩu phải có ít nhất 8 ký tự và không chứa dấu cách.");
+        return false;
+    }
+
+    // Nếu tất cả các điều kiện đều đúng
+    return true;
+}
     
     /**
      * @param args the command line arguments
@@ -334,9 +366,11 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton LoginBtn;
+    private javax.swing.JButton forgotPassBtn;
+    private javax.swing.JMenuItem githubBtn;
     private javax.swing.JButton guestLogBtn;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JMenuItem issuesBtn;
     private javax.swing.JButton jButton5;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JDialog jDialog2;
@@ -346,16 +380,14 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JButton loginBtn;
+    private javax.swing.JPasswordField passwordfield;
+    private javax.swing.JButton registerBtn;
+    private javax.swing.JMenuItem resBtn;
+    private javax.swing.JTextField userfield;
     // End of variables declaration//GEN-END:variables
 }
