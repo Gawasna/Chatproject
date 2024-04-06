@@ -12,8 +12,10 @@ import java.io.IOException;
 import java.net.URI;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
-import static com.chatproject.controller.LoginHandler.NonFunction;
+import com.chatproject.controller.LoginHandler;
+import com.chatproject.controller.LookAndFeelManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -29,8 +31,10 @@ public class Login extends javax.swing.JFrame {
     public static String ISSUE_LINK = "https://github.com/Gawasna/Chatproject/issues";
     public String Resources_File_Path = "src\\main\\java\\com\\chatproject\\info\\resources.txt";
     public static String DEFAULT_LAF = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
+    
     public Login() {
         initComponents();
+        LookAndFeelManager.registerFrame(this);
     }
 
     /**
@@ -61,6 +65,10 @@ public class Login extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        motiflaf = new javax.swing.JMenuItem();
+        nimbuslaf = new javax.swing.JMenuItem();
+        windowlaf = new javax.swing.JMenuItem();
+        winclassiclaf = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         githubBtn = new javax.swing.JMenuItem();
         resBtn = new javax.swing.JMenuItem();
@@ -161,6 +169,11 @@ public class Login extends javax.swing.JFrame {
         });
 
         registerBtn.setText("Tạo tài khoản mới");
+        registerBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                registerBtnActionPerformed(evt);
+            }
+        });
 
         guestLogBtn.setText("Đăng nhập khách");
         guestLogBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -219,6 +232,39 @@ public class Login extends javax.swing.JFrame {
         );
 
         jMenu1.setText("Theme");
+
+        motiflaf.setText("Motif");
+        motiflaf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                motiflafActionPerformed(evt);
+            }
+        });
+        jMenu1.add(motiflaf);
+
+        nimbuslaf.setText("Nimbus");
+        nimbuslaf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nimbuslafActionPerformed(evt);
+            }
+        });
+        jMenu1.add(nimbuslaf);
+
+        windowlaf.setText("Window");
+        windowlaf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                windowlafActionPerformed(evt);
+            }
+        });
+        jMenu1.add(windowlaf);
+
+        winclassiclaf.setText("Window Classic");
+        winclassiclaf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                winclassiclafActionPerformed(evt);
+            }
+        });
+        jMenu1.add(winclassiclaf);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("About");
@@ -296,7 +342,7 @@ public class Login extends javax.swing.JFrame {
         jTextArea1.setText("Error reading file: " + e.getMessage());
     }
 }
-    
+
     private void resBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resBtnActionPerformed
         jDialog1.setVisible(true);
         ReadResourcesInProject();
@@ -304,44 +350,71 @@ public class Login extends javax.swing.JFrame {
     
     //NonFunction() = tính năng chưa làm
     private void guestLogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guestLogBtnActionPerformed
-       NonFunction();
+       LoginHandler.NonFunction();
     }//GEN-LAST:event_guestLogBtnActionPerformed
 
     private void LoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBtnActionPerformed
         // TODO add your handling code here:
+    String username = userfield.getText();
+    String password = passwordfield.getText();
+
+    // Kiểm tra cú pháp đăng nhập
+     if (LoginHandler.checkLoginSyntax(username, password)) {
+        if (LoginHandler.checkAccountInDatabase(username, password)) {
+            //tiến hành đăng nhập
+            //mở cửa sổ MainChat
+            System.out.println("Đăng nhập thành công");
+        } else {
+            System.out.println("Tài khoản không tồn tại hoặc mật khẩu không đúng");
+        }
+    } else {
+        System.out.println("Lỗi");
+    }
         //kiểm tra cú pháp đăng nhập và tài khoản , hợp lệ thì thực hiện
     }//GEN-LAST:event_LoginBtnActionPerformed
 
     private void forgotPassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forgotPassBtnActionPerformed
-        NonFunction();
+        LoginHandler.NonFunction();
     }//GEN-LAST:event_forgotPassBtnActionPerformed
 
     private void userfieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userfieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_userfieldActionPerformed
+
+    private void motiflafActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_motiflafActionPerformed
+        // TODO add your handling code here:
+        changeLookAndFeel(LookAndFeelManager.DEFAULT_LAF);
+        
+    }//GEN-LAST:event_motiflafActionPerformed
+
+    private void nimbuslafActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nimbuslafActionPerformed
+        // TODO add your handling code here:
+        changeLookAndFeel(LookAndFeelManager.NIMBUS_LAF);
+    }//GEN-LAST:event_nimbuslafActionPerformed
+
+    private void windowlafActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_windowlafActionPerformed
+        // TODO add your handling code here:
+        changeLookAndFeel(LookAndFeelManager.WINDOW_LAF);
+    }//GEN-LAST:event_windowlafActionPerformed
+
+    private void winclassiclafActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_winclassiclafActionPerformed
+        // TODO add your handling code here:
+        changeLookAndFeel(LookAndFeelManager.WINDOW_CLASSIC_LAF);
+    }//GEN-LAST:event_winclassiclafActionPerformed
+
+    private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
+        // TODO add your handling code here:
+        new Register().setVisible(true);
+    }//GEN-LAST:event_registerBtnActionPerformed
     
-    public boolean checkLoginSyntax(String username, String password) {
-    // Kiểm tra xem đã nhập đủ thông tin tài khoản và mật khẩu chưa
-    if (username.isEmpty() || password.isEmpty()) {
-        System.out.println("Vui lòng nhập đầy đủ tên tài khoản và mật khẩu.");
-        return false;
+    private void changeLookAndFeel(String lookAndFeel) {
+        try {
+            LookAndFeelManager.changeLookAndFeelForAllFrames(lookAndFeel);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-
-    // Kiểm tra cú pháp của tên tài khoản
-    if (username.length() < 5 || username.contains(" ") || !username.matches("[a-zA-Z0-9]+")) {
-        System.out.println("Tên tài khoản không hợp lệ. Tên tài khoản phải có ít nhất 5 ký tự, không chứa kí tự đặc biệt và không có dấu cách.");
-        return false;
-    }
-
-    // Kiểm tra cú pháp của mật khẩu
-    if (password.length() < 8 || password.contains(" ")) {
-        System.out.println("Mật khẩu không hợp lệ. Mật khẩu phải có ít nhất 8 ký tự và không chứa dấu cách.");
-        return false;
-    }
-
-    // Nếu tất cả các điều kiện đều đúng
-    return true;
-}
+    
     
     /**
      * @param args the command line arguments
@@ -386,9 +459,13 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JMenuItem motiflaf;
+    private javax.swing.JMenuItem nimbuslaf;
     private javax.swing.JPasswordField passwordfield;
     private javax.swing.JButton registerBtn;
     private javax.swing.JMenuItem resBtn;
     private javax.swing.JTextField userfield;
+    private javax.swing.JMenuItem winclassiclaf;
+    private javax.swing.JMenuItem windowlaf;
     // End of variables declaration//GEN-END:variables
 }

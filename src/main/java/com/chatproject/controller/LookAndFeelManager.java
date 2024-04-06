@@ -4,43 +4,39 @@
  */
 package com.chatproject.controller;
 
-/**
- *
- * @author hungl
- */
-import java.awt.Component;
-import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class LookAndFeelManager {
-    public static void changeLookAndFeel(JFrame frame, String lookAndFeel) throws UnsupportedLookAndFeelException {
+    public static final String DEFAULT_LAF = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
+    public static final String NIMBUS_LAF = "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel";
+    public static final String WINDOW_LAF = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
+    public static final String WINDOW_CLASSIC_LAF = "com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel";
+
+    private static String currentLookAndFeel;
+    private static List<javax.swing.JFrame> registeredFrames = new ArrayList<>();
+
+    public static void registerFrame(javax.swing.JFrame frame) {
+        registeredFrames.add(frame);
+    }
+
+    public static void changeLookAndFeelForAllFrames(String lookAndFeel) throws ClassNotFoundException {
         try {
-            UIManager.setLookAndFeel(lookAndFeel);
-            SwingUtilities.updateComponentTreeUI(frame);
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            ex.printStackTrace();
+            for (javax.swing.JFrame frame : registeredFrames) {
+                javax.swing.UIManager.setLookAndFeel(lookAndFeel);
+                javax.swing.SwingUtilities.updateComponentTreeUI(frame);
+            }
+            currentLookAndFeel = lookAndFeel;
+        } catch (UnsupportedLookAndFeelException e) {
+        } catch (InstantiationException | IllegalAccessException ex) {
+            Logger.getLogger(LookAndFeelManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static void updateFrameLookAndFeel(JFrame frame, String selectedLookAndFeel) {
-        JMenuBar menuBar = frame.getJMenuBar();
-        if (menuBar != null) {
-            for (int i = 0; i < menuBar.getMenuCount(); i++) {
-                JMenu menu = menuBar.getMenu(i);
-                updateMenuItemsLookAndFeel(menu, selectedLookAndFeel);
-            }
-        }
-    }
-
-    private static void updateMenuItemsLookAndFeel(JMenu menu, String selectedLookAndFeel) {
-        for (Component menuComponent : menu.getMenuComponents()) {
-            if (menuComponent instanceof JMenuItem) {
-                JMenuItem jMenuItem = (JMenuItem) menuComponent;
-                if (jMenuItem.getText().equals(selectedLookAndFeel)) {
-                    jMenuItem.setIcon(new ImageIcon(LookAndFeelManager.class.getResource("/com/dailylog/resources/selected.png")));
-                } else {
-                    jMenuItem.setIcon(null);
-                }
-            }
-        }
+    public static String getCurrentLookAndFeel() {
+        return currentLookAndFeel;
     }
 }
