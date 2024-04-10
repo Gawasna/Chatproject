@@ -28,7 +28,7 @@ public class Login extends javax.swing.JFrame {
      */
     
     public static String REPO_LINK = "https://github.com/Gawasna/Chatproject";
-    public static String ISSUE_LINK = "https://github.com/Gawasna/Chatproject/issues";
+    public static String ISSUE_LINK = "https://github.com/Gawasna/Chatproject/issues/";
     public String Resources_File_Path = "src\\main\\java\\com\\chatproject\\info\\resources.txt";
     public static String DEFAULT_LAF = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
     
@@ -286,6 +286,11 @@ public class Login extends javax.swing.JFrame {
         jMenu2.add(resBtn);
 
         issuesBtn.setText("Issues");
+        issuesBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                issuesBtnActionPerformed(evt);
+            }
+        });
         jMenu2.add(issuesBtn);
 
         jMenuBar1.add(jMenu2);
@@ -308,11 +313,11 @@ public class Login extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    private void OpenRepoLink () {
+    private void OpenRepoLink (String LINK) {
         if (Desktop.isDesktopSupported()) {
             Desktop desktop = Desktop.getDesktop();
             try {
-                desktop.browse(new URI(REPO_LINK));
+                desktop.browse(new URI(LINK));
             } catch (Exception e) {
             }
         } else {
@@ -321,7 +326,7 @@ public class Login extends javax.swing.JFrame {
     }
     
     private void githubBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_githubBtnActionPerformed
-        OpenRepoLink();
+        OpenRepoLink(REPO_LINK);
     }//GEN-LAST:event_githubBtnActionPerformed
     
     private void ReadResourcesInProject() {
@@ -406,6 +411,11 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
         new Register().setVisible(true);
     }//GEN-LAST:event_registerBtnActionPerformed
+
+    private void issuesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_issuesBtnActionPerformed
+        // TODO add your handling code here:'
+        OpenRepoLink(ISSUE_LINK);
+    }//GEN-LAST:event_issuesBtnActionPerformed
     
     private void changeLookAndFeel(String lookAndFeel) {
         try {
