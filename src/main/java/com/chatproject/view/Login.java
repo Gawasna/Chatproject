@@ -30,6 +30,7 @@ public class Login extends javax.swing.JFrame {
     public static String REPO_LINK = "https://github.com/Gawasna/Chatproject";
     public static String ISSUE_LINK = "https://github.com/Gawasna/Chatproject/issues/";
     public String Resources_File_Path = "src\\main\\java\\com\\chatproject\\info\\resources.txt";
+    public static String Structure_Path = "src\\main\\java\\com\\chatproject\\info\\structure.txt";
     public static String DEFAULT_LAF = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
     
     public Login() {
@@ -73,6 +74,7 @@ public class Login extends javax.swing.JFrame {
         githubBtn = new javax.swing.JMenuItem();
         resBtn = new javax.swing.JMenuItem();
         issuesBtn = new javax.swing.JMenuItem();
+        stritem = new javax.swing.JMenuItem();
 
         jDialog1.setTitle("Resources");
         jDialog1.setBounds(new java.awt.Rectangle(0, 0, 400, 600));
@@ -297,6 +299,14 @@ public class Login extends javax.swing.JFrame {
         });
         jMenu2.add(issuesBtn);
 
+        stritem.setText("Structure");
+        stritem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stritemActionPerformed(evt);
+            }
+        });
+        jMenu2.add(stritem);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -333,9 +343,9 @@ public class Login extends javax.swing.JFrame {
         OpenRepoLink(REPO_LINK);
     }//GEN-LAST:event_githubBtnActionPerformed
     
-    private void ReadResourcesInProject() {
+    private void ReadResourcesInProject(String infopath) {
     try {
-        File file = new File(Resources_File_Path);
+        File file = new File(infopath);
         try (FileReader fileReader = new FileReader(file); BufferedReader bufferedReader = new BufferedReader(fileReader)) {
             String line;
             StringBuilder stringBuilder = new StringBuilder();
@@ -354,7 +364,7 @@ public class Login extends javax.swing.JFrame {
 
     private void resBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resBtnActionPerformed
         jDialog1.setVisible(true);
-        ReadResourcesInProject();
+        ReadResourcesInProject(Resources_File_Path);
     }//GEN-LAST:event_resBtnActionPerformed
     
     //NonFunction() = tính năng chưa làm
@@ -423,6 +433,12 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:'
         OpenRepoLink(ISSUE_LINK);
     }//GEN-LAST:event_issuesBtnActionPerformed
+
+    private void stritemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stritemActionPerformed
+        // TODO add your handling code here:
+        jDialog1.setVisible(true);
+        ReadResourcesInProject(Structure_Path);
+    }//GEN-LAST:event_stritemActionPerformed
     
     private void changeLookAndFeel(String lookAndFeel) {
         try {
@@ -481,6 +497,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPasswordField passwordfield;
     private javax.swing.JButton registerBtn;
     private javax.swing.JMenuItem resBtn;
+    private javax.swing.JMenuItem stritem;
     private javax.swing.JTextField userfield;
     private javax.swing.JMenuItem winclassiclaf;
     private javax.swing.JMenuItem windowlaf;

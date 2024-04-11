@@ -13,6 +13,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
+import java.util.random.RandomGenerator;
 import javax.swing.JDialog;
 
 /**
@@ -20,7 +22,7 @@ import javax.swing.JDialog;
  * @author hungl
  */
 public class LoginHandler {
-
+    
     public static void NonFunction() {
         String nonfunc = "Tính năng đang được phát triển !";
         //JOptionPane op = new JOptionPane();
@@ -107,5 +109,10 @@ public class LoginHandler {
     public static void GuestLogin () {
         JDialog jd = new JDialog();
         jd.setVisible(true);
+    }
+    public String generateGuestUsername() {
+        Random random = new Random();
+        int randomNumber = random.nextInt(90000) + 10000; // Tạo số ngẫu nhiên từ 10000 đến 99999
+        return "Guest@" + randomNumber;
     }
 }

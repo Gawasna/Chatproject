@@ -7,6 +7,7 @@ com\chatproject\view\Login$9.class
 com\chatproject\view\Login$4.class
 com\chatproject\view\Register$5.class
 com\chatproject\controller\Server.class
+com\chatproject\controller\ClientHandler.class
 com\chatproject\controller\LoginHandler.class
 com\chatproject\view\Register$6.class
 com\chatproject\view\MainChat$2.class
@@ -18,16 +19,15 @@ com\chatproject\view\Register$3.class
 com\chatproject\view\Login$12.class
 com\chatproject\view\Login$8.class
 com\chatproject\view\MainChat.class
-com\chatproject\controller\LaFManager.class
 com\chatproject\view\Login$1.class
 com\chatproject\view\Login$3.class
 com\chatproject\view\PlaceholderTextField.class
 com\chatproject\view\Login.class
 com\chatproject\view\Register$1.class
-com\chatproject\view\LookAndFeelChangeListener.class
 com\chatproject\view\Login$5.class
 com\chatproject\view\Register.class
 com\chatproject\view\Register$4.class
+com\chatproject\view\Login$14.class
 com\chatproject\view\Login$7.class
 com\chatproject\view\Register$7.class
 com\chatproject\view\Login$2.class
