@@ -143,7 +143,11 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("jLabel1");
+        jLabel1.setFont(new java.awt.Font("Courier New", 2, 18)); // NOI18N
+        jLabel1.setText("Chat application...");
+        jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jLabel1.setMinimumSize(new java.awt.Dimension(4000, 2048));
+        jLabel1.setPreferredSize(new java.awt.Dimension(4000, 2048));
 
         userfield.setText("");
         userfield.addActionListener(new java.awt.event.ActionListener() {
@@ -356,6 +360,9 @@ public class Login extends javax.swing.JFrame {
     //NonFunction() = tính năng chưa làm
     private void guestLogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guestLogBtnActionPerformed
        LoginHandler.NonFunction();
+       LoginHandler.GuestLogin();
+       //chạy func lấy tên để gen rồi mới chạy frame
+       new MainChat().setVisible(true);
     }//GEN-LAST:event_guestLogBtnActionPerformed
 
     private void LoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBtnActionPerformed

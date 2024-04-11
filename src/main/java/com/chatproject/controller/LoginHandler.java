@@ -13,6 +13,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JDialog;
 
 /**
  *
@@ -101,5 +102,10 @@ public class LoginHandler {
             System.out.println("Lỗi hoặc tài khoản không tồn tại");
         }
         return result;
+    }
+    
+    public static void GuestLogin () {
+        JDialog jd = new JDialog();
+        jd.setVisible(true);
     }
 }

@@ -8,6 +8,6 @@ package com.chatproject.controller;
  *
  * @author hungl
  */
-public class Sever {
+public class Server {
     
 }
