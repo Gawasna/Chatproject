@@ -56,6 +56,7 @@ public class Server {
     public synchronized void removeClient(String username) {
         clients.remove(username);
     }
+    
 }
 
 
