@@ -6,6 +6,10 @@ package com.chatproject.view;
 
 import com.chatproject.controller.LookAndFeelManager;
 import static com.chatproject.view.Login.DEFAULT_LAF;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
@@ -16,7 +20,10 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author hungl
  */
 public class Register extends javax.swing.JFrame {
-
+    
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/clientchatdb";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "";
     /**
      * Creates new form Register
      */
@@ -164,9 +171,64 @@ public class Register extends javax.swing.JFrame {
     }
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        // Xử lý sự kiện khi nút Đăng ký được nhấn
+    String username = jTextField3.getText().trim();
+    String password = String.valueOf(jPasswordField1.getPassword()).trim();
+    String confirmPassword = String.valueOf(jPasswordField2.getPassword()).trim();
 
+    // Kiểm tra cú pháp và trường nhập lại mật khẩu
+    if (checkRegisterSyntax(username, password, confirmPassword)) {
+        // Thêm tài khoản vào cơ sở dữ liệu
+        if (createAccount(username, password)) {
+            System.out.println("Đăng ký thành công!");
+            // Đóng cửa sổ hiện tại của Register
+            this.dispose(); // Đóng cửa sổ
+            // Mở cửa sổ Login
+            Login login = new Login();
+            login.setVisible(true);
+        } else {
+            System.out.println("Đăng ký thất bại. Vui lòng thử lại sau.");
+        }
+    }
+    }//GEN-LAST:event_jButton1ActionPerformed
+    
+    private boolean checkRegisterSyntax(String username, String password, String confirmPassword) {
+        // Kiểm tra cú pháp của tên đăng nhập và mật khẩu
+        if (!checkLoginSyntax(username, password)) {
+            return false;
+        }
+
+        // Kiểm tra trường nhập lại mật khẩu
+        if (!password.equals(confirmPassword)) {
+            System.out.println("Mật khẩu không khớp. Vui lòng nhập lại mật khẩu.");
+            return false;
+        }
+
+        return true;
+    }
+    
+    private boolean createAccount(String username, String password) {
+        try {
+            // Kết nối cơ sở dữ liệu
+            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+
+            // Chuẩn bị câu lệnh SQL để thêm tài khoản
+            String sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, username);
+            statement.setString(2, password);
+
+            // Thực thi câu lệnh SQL
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted > 0) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            System.out.println("Lỗi khi thêm tài khoản vào cơ sở dữ liệu: " + ex.getMessage());
+        }
+        return false;
+    }
+    
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField3ActionPerformed
