@@ -1,63 +1,44 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.chatproject.controller;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-/**
- *
- * @author hungl
- */
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Server {
-    private HashMap<String, ClientHandler> clients = new HashMap<>();
+    private static final int PORT = 12345;
+    private List<ClientHandler> clients = new ArrayList<>();
 
-    public Server() {
+    public void startServer() {
         try {
-            ServerSocket serverSocket = new ServerSocket(8088);
-            System.out.println("Server started");
+            ServerSocket serverSocket = new ServerSocket(PORT);
+            System.out.println("Server is running...");
+
             while (true) {
-                Socket socket = serverSocket.accept();
-                System.out.println("Client connected");
-                try {
-                    ClientHandler clientHandler = new ClientHandler(socket, this);
-                    clientHandler.start();
-                } catch (IOException e) {
-                    socket.close();
-                }
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("New client connected: " + clientSocket);
+                ClientHandler clientHandler = new ClientHandler(clientSocket);
+                clients.add(clientHandler);
+                clientHandler.start();
             }
         } catch (IOException e) {
+            System.err.println("Error starting the server: " + e.getMessage());
         }
     }
 
-    public synchronized void broadcastMessage(String message, String sender) {
-        for (ClientHandler clientHandler : clients.values()) {
-            clientHandler.sendMessage(sender, message);
+    public synchronized void broadcastMessage(String message) {
+        for (ClientHandler client : clients) {
+            client.sendMessage(message);
         }
     }
 
-    public synchronized void addClient(String username, ClientHandler clientHandler) {
-        clients.put(username, clientHandler);
+    public synchronized void removeClient(ClientHandler client) {
+        clients.remove(client);
     }
 
-    public synchronized void removeClient(String username) {
-        clients.remove(username);
+    public static void main(String[] args) {
+        Server server = new Server();
+        server.startServer();
     }
-    
 }
-
-
-

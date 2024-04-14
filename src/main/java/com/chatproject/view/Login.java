@@ -4,6 +4,7 @@
  */
 package com.chatproject.view;
 
+import com.chatproject.controller.Client;
 import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,6 +17,7 @@ import com.chatproject.controller.LoginHandler;
 import com.chatproject.controller.LookAndFeelManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -32,7 +34,6 @@ public class Login extends javax.swing.JFrame {
     public String Resources_File_Path = "src\\main\\java\\com\\chatproject\\info\\resources.txt";
     public static String Structure_Path = "src\\main\\java\\com\\chatproject\\info\\structure.txt";
     public static String DEFAULT_LAF = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
-    
     public Login() {
         initComponents();
         LookAndFeelManager.registerFrame(this);
@@ -352,10 +353,9 @@ public class Login extends javax.swing.JFrame {
             while ((line = bufferedReader.readLine()) != null) {
                 stringBuilder.append(line).append("\n");
             }
-           
             jTextArea1.setText(stringBuilder.toString());
-            jTextArea1.setCaretPosition(0); // Đặt vị trí con trỏ ở đầu văn bản
-            jTextArea1.setLineWrap(true); // Tự động xuống dòng khi cần
+            jTextArea1.setCaretPosition(0);
+            jTextArea1.setLineWrap(true); 
         }
     } catch (IOException e) {
         jTextArea1.setText("Error reading file: " + e.getMessage());
@@ -366,33 +366,26 @@ public class Login extends javax.swing.JFrame {
         jDialog1.setVisible(true);
         ReadResourcesInProject(Resources_File_Path);
     }//GEN-LAST:event_resBtnActionPerformed
-    
-    //NonFunction() = tính năng chưa làm
+
     private void guestLogBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guestLogBtnActionPerformed
-       LoginHandler.NonFunction();
-       LoginHandler.GuestLogin();
-       //chạy func lấy tên để gen rồi mới chạy frame
+       Client client = new Client("localhost", 12345);
        new MainChat().setVisible(true);
     }//GEN-LAST:event_guestLogBtnActionPerformed
 
     private void LoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginBtnActionPerformed
-        // TODO add your handling code here:
-    String username = userfield.getText();
-    String password = passwordfield.getText();
-
-    // Kiểm tra cú pháp đăng nhập
-     if (LoginHandler.checkLoginSyntax(username, password)) {
-        if (LoginHandler.checkAccountInDatabase(username, password)) {
-            //tiến hành đăng nhập
-            //mở cửa sổ MainChat
-            System.out.println("Đăng nhập thành công");
+           String username = userfield.getText();
+        String password = passwordfield.getText();
+        if (LoginHandler.checkLoginSyntax(username, password)) {
+            if (LoginHandler.checkAccountInDatabase(username, password)) {
+                JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
+                Client client = new Client("localhost", 12345);
+                new MainChat().setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại hoặc mật khẩu không đúng");
+            }
         } else {
-            System.out.println("Tài khoản không tồn tại hoặc mật khẩu không đúng");
+            JOptionPane.showMessageDialog(this, "Lỗi cú pháp !");
         }
-    } else {
-        System.out.println("Lỗi");
-    }
-        //kiểm tra cú pháp đăng nhập và tài khoản , hợp lệ thì thực hiện
     }//GEN-LAST:event_LoginBtnActionPerformed
 
     private void forgotPassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forgotPassBtnActionPerformed

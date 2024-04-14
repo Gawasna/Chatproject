@@ -10,7 +10,6 @@ com\chatproject\controller\Server.class
 com\chatproject\controller\ClientHandler.class
 com\chatproject\controller\LoginHandler.class
 com\chatproject\view\Register$6.class
-com\chatproject\view\MainChat$2.class
 com\chatproject\controller\LookAndFeelManager.class
 com\chatproject\controller\Client.class
 com\chatproject\view\Login$10.class
