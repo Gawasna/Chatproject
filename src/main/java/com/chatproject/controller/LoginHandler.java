@@ -21,12 +21,10 @@ public class LoginHandler {
             System.out.println("Vui lòng nhập đầy đủ tên tài khoản và mật khẩu.");
             return false;
         }
-
         if (username.length() < 5 || username.contains(" ") || !username.matches("[a-zA-Z0-9]+") || !hasMinimumLetters(username) || startsWithNumber(username)) {
             System.out.println("Tên tài khoản không hợp lệ. Tên tài khoản phải có ít nhất 5 ký tự, không chứa kí tự đặc biệt và không có dấu cách. Tên tài khoản phải có ít nhất 5 chữ cái và không bắt đầu bằng số.");
             return false;
         }
-
         if (password.length() < 8 || password.contains(" ")) {
             System.out.println("Mật khẩu không hợp lệ. Mật khẩu phải có ít nhất 8 ký tự và không chứa dấu cách.");
             return false;

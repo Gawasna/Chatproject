@@ -173,7 +173,7 @@ public class MainChat extends javax.swing.JFrame {
     private void sendMessageBtnActionPerformed(java.awt.event.ActionEvent evt) {                                                 
      String message = messagefield.getText();
                 if (!message.isEmpty()) {
-                   // ClientHandler.sendMessage(message);
+//                   ClientHandler.sendMessage(message);
                     messagefield.setText("");
                 }
     }                                                
