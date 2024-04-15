@@ -11,11 +11,10 @@ public class Server {
     public void startServer() {
         try {
             ServerSocket serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName("0.0.0.0"));
-            System.out.println("Server is running on "+PORT);
+            System.out.println("Server is running on port "+PORT);
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("New client connected: " + clientSocket
-                        + "\n Client: " );
+                System.out.println("New client connected: " + clientSocket);
                 ClientHandler clientHandler = new ClientHandler(clientSocket);
                 clients.add(clientHandler);
                 clientHandler.start();

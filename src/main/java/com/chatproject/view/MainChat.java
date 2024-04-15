@@ -25,11 +25,6 @@ public class MainChat extends javax.swing.JFrame {
     public MainChat() {
         initComponents();
     }
-
-    MainChat(Client client) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -77,6 +72,11 @@ public class MainChat extends javax.swing.JFrame {
         jScrollPane2.setViewportView(content_chat);
 
         sendMessageBtn.setText("Send");
+        sendMessageBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendMessageBtnActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Tình trạng");
 
@@ -170,13 +170,11 @@ public class MainChat extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void sendMessageBtnActionPerformed(java.awt.event.ActionEvent evt) {                                                 
-     String message = messagefield.getText();
-                if (!message.isEmpty()) {
-//                   ClientHandler.sendMessage(message);
-                    messagefield.setText("");
-                }
-    }                                                
+    private void sendMessageBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMessageBtnActionPerformed
+        //dang fix
+    }//GEN-LAST:event_sendMessageBtnActionPerformed
+
+                                             
     
     /**
      * @param args the command line arguments
