@@ -1,4 +1,8 @@
-package SampleCode;
+package fnl;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 import java.sql.Connection;
@@ -6,25 +10,46 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ChatServer {
+
     private static final int PORT = 12345;
+    //private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static Set<User> users = new HashSet<>();
     private static Map<String, PrintWriter> userWriters = new HashMap<>();
+    private static HashMap<String, ClientHandler> clients = new HashMap<>();
 
     public static void main(String[] args) {
-        try (
-            ServerSocket serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName("0.0.0.0"))) {
-            System.out.println("Server is running on port "+PORT);
+        JFrame frame = new JFrame("Server console");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JTextArea logArea = new JTextArea();
+        logArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(logArea);
+        frame.add(scrollPane, BorderLayout.CENTER);
+        frame.setSize(400, 300);
+        frame.setVisible(true);
+
+        try {
+            ServerSocket serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName("0.0.0.0"));
+            logArea.append("Server started on port " + PORT + "\n");
+
             while (true) {
+                //Socket socket = serverSocket.accept();
+                
+                //ClientHandler clientHandler = new ClientHandler(socket, logArea);
+                //clients.put(clientHandler.getUsername(), clientHandler);
+                //new Thread(clientHandler).start();
+                
                 new ClientHandler(serverSocket.accept()).start();
+                logArea.append("New client connected: " + serverSocket + "\n");
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-
+    
     private static class ClientHandler extends Thread {
         private Socket socket;
         private BufferedReader reader;
@@ -77,22 +102,14 @@ public class ChatServer {
                             String[] parts = message.split(" ", 2);
                             String recipient = parts[0].substring(1);
                             String content = parts[1];
-                            
-                            broadcastPrivateMessage(currentUser.getUsername(), recipient, message);
                             sendMessageToUser(recipient, currentUser.getUsername(), content);
                         } else if (message.equalsIgnoreCase("general chat")) { // General chat
-                            broadcastMessage(currentUser.getUsername(), message);
-                            //
-                            sendMessageToAll(currentUser.getUsername(), message);
-                        } else { broadcastMessage(currentUser.getUsername(), message);
-                            //
-                            sendMessageToAll(currentUser.getUsername(), message);} 
+                            broadcastMessage(currentUser.getUsername(), "entered General Chat");
+                        }
                     } else { // GUEST_LOGIN
-                         // General chat
-                            broadcastMessage(currentUser.getUsername(), message);
-                            //
-                            sendMessageToAll(currentUser.getUsername(), message);
-                        
+                        if (message.equalsIgnoreCase("general chat")) { // General chat
+                            broadcastMessage(currentUser.getUsername(), "entered General Chat");
+                        }
                     }
                 }
             } catch (IOException ex) {
@@ -112,7 +129,7 @@ public class ChatServer {
         }
 
         private boolean checkLogin(String username, String password) {
-                try {
+            try {
             String url = "jdbc:mysql://localhost:3306/clientchatdb";
             String dbUsername = "root";
             String dbPassword = "";
@@ -124,7 +141,7 @@ public class ChatServer {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 System.out.println("Tài khoản tồn tại");
-                return true; 
+                return true;
             }
             connection.close();
         } catch (SQLException e) {
@@ -150,32 +167,11 @@ public class ChatServer {
                 writer.println("@" + sender + ":" + message);
             }
         }
-        
-        private void broadcastPrivateMessage(String sender, String recipient, String message) {
-            // Tìm PrintWriter của người gửi và người nhận
-            PrintWriter senderWriter = userWriters.get(sender);
-            PrintWriter recipientWriter = userWriters.get(recipient);
-
-            // Kiểm tra nếu cả người gửi và người nhận đều tồn tại
-            if (senderWriter != null && recipientWriter != null) {
-                // Gửi tin nhắn cho người gửi
-                senderWriter.println("@" + recipient + ":" + message);
-                // Gửi tin nhắn cho người nhận
-                recipientWriter.println("@" + sender + ":" + message);
-            }
-        }
 
         private void sendMessageToUser(String recipient, String sender, String message) {
             PrintWriter writer = userWriters.get(recipient);
             if (writer != null) {
                 writer.println("@" + sender + ":" + message);
-            }
-        }
-        
-        public void sendMessageToAll (String sender , String message) {
-            PrintWriter writer = userWriters.get(message);
-            if (writer != null) {
-                writer.println(sender + ":\n" + message);
             }
         }
 

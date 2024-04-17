@@ -1,13 +1,15 @@
-package SampleCode;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.chatproject.assets;
 public class User {
     private String username;
     private AccountType accountType;
-    //private ChatType chatType;
-    
-    public User(String username, AccountType accountType/*, ChatType chatType*/) {
+
+    public User(String username, AccountType accountType) {
         this.username = username;
         this.accountType = accountType;
-        //this.chatType = chatType;
     }
 
     public String getUsername() {
@@ -17,20 +19,9 @@ public class User {
     public AccountType getAccountType() {
         return accountType;
     }
-    
-    /*public ChatType getChatType () {
-        return chatType;
-    }
-    */
 
     public enum AccountType {
         DATABASE_LOGIN,
         GUEST_LOGIN
     }
-    
-    /*public enum ChatType {
-        GENERAL_CHAT,
-        PRIVATE_CHAT
-    }
-    */
 }
