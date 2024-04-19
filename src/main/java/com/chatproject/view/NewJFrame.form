@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="3"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Container class="javax.swing.JPanel" name="jPanel1">
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Component id="tabbedPane" alignment="0" pref="920" max="32767" attributes="0"/>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Component id="tabbedPane" alignment="0" pref="565" max="32767" attributes="0"/>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Container class="javax.swing.JTabbedPane" name="tabbedPane">
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="// Tab 1&#xa;        JPanel panel1 = new JPanel();&#xa;        panel1.setBackground(Color.WHITE);&#xa;        JLabel label1 = new JLabel(&quot;This is Tab 1&quot;);&#xa;        panel1.add(label1);&#xa;        tabbedPane.addTab(&quot;Tab 1&quot;, panel1);&#xa;&#xa;        // Tab 2&#xa;        JPanel panel2 = new JPanel();&#xa;        panel2.setBackground(Color.WHITE);&#xa;        JLabel label2 = new JLabel(&quot;This is Tab 2&quot;);&#xa;        panel2.add(label2);&#xa;        tabbedPane.addTab(&quot;Tab 2&quot;, panel2);&#xa;&#xa;        // Tab 3&#xa;        JPanel panel3 = new JPanel();&#xa;        panel3.setBackground(Color.WHITE);&#xa;        JLabel label3 = new JLabel(&quot;This is Tab 3&quot;);&#xa;        panel3.add(label3);&#xa;        tabbedPane.addTab(&quot;Tab 3&quot;, panel3);&#xa;&#xa;        // Tab 4&#xa;        JPanel panel4 = new JPanel();&#xa;        panel4.setBackground(Color.WHITE);&#xa;        JLabel label4 = new JLabel(&quot;This is Tab 4&quot;);&#xa;        panel4.add(label4);&#xa;        tabbedPane.addTab(&quot;Tab 4&quot;, panel4);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTabbedPane(JTabbedPane.LEFT)"/>
+          </AuxValues>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
+        </Container>
+      </SubComponents>
+    </Container>
+  </SubComponents>
+</Form>

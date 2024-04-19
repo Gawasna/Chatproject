@@ -20,6 +20,7 @@ public class ChatClient extends JFrame {
     private BufferedReader reader;
     private PrintWriter writer;
     private User currentUser;
+    public String ipv4;
 
     public ChatClient() {
         setTitle("Chat Client");
@@ -52,6 +53,11 @@ public class ChatClient extends JFrame {
         inputPanel.add(messageInput, BorderLayout.CENTER);
         inputPanel.add(sendButton, BorderLayout.EAST);
         add(inputPanel, BorderLayout.SOUTH);
+        
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Nhập địa chỉ IPv4 của máy chủ: ");
+        ipv4 = scanner.nextLine();
+        scanner.close();
 
         loginDialog();
     }
@@ -77,7 +83,7 @@ public class ChatClient extends JFrame {
                 String password = new String(passwordField.getPassword());
                 if (!username.isEmpty() && !password.isEmpty()) {
                     try {
-                        socket = new Socket("localhost", 12345);
+                        socket = new Socket(ipv4, 12345);
                         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                         writer = new PrintWriter(socket.getOutputStream(), true);
 
@@ -101,7 +107,7 @@ public class ChatClient extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    socket = new Socket("localhost", 12345);
+                    socket = new Socket(ipv4, 12345);
                     reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     writer = new PrintWriter(socket.getOutputStream(), true);
 
