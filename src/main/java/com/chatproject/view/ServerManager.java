@@ -455,13 +455,13 @@ public class ServerManager extends javax.swing.JFrame {
             statement.setString(2, password);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                System.out.println("Tài khoản tồn tại");
+                System.out.println("Account Found");
                 return true; 
             }
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Lỗi hoặc tài khoản không tồn tại");
+            System.out.println("Error. Account doesn't exist");
             return false;
         }
             return false;
@@ -543,7 +543,7 @@ public class ServerManager extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea consolearea;
+    public javax.swing.JTextArea consolearea;
     private javax.swing.JTextField ipv4field;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

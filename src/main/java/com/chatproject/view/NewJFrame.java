@@ -59,6 +59,7 @@ public class NewJFrame extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Main Chat");
         getContentPane().setLayout(new java.awt.CardLayout());
 
         jButton1.setText("jButton1");
@@ -115,7 +116,7 @@ public class NewJFrame extends javax.swing.JFrame {
         mainchatpan.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chatproject/assets/icons8-user-40.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/asset/icons8-user-40.png"))); // NOI18N
 
         jLabel2.setText("jLabel2");
 
@@ -139,7 +140,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jButton8.setText("jButton8");
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chatproject/assets/icons8-user-40.png"))); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/asset/icons8-user-40.png"))); // NOI18N
 
         jLabel4.setText("jLabel4");
 
