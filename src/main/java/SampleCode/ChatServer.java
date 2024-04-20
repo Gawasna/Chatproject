@@ -15,7 +15,7 @@ public class ChatServer {
 
     public static void main(String[] args) {
         try (
-            ServerSocket serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName("0.0.0.0"))) {
+            ServerSocket serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName("192.168.43.167"))) {
             System.out.println("Server is running on port "+PORT);
             while (true) {
                 new ClientHandler(serverSocket.accept()).start();
