@@ -20,7 +20,7 @@ public class ChatClient extends JFrame {
     private BufferedReader reader;
     private PrintWriter writer;
     private User currentUser;
-    public String ipv4;
+    public String ipv4 = "192.168.43.167";
 
     public ChatClient() {
         setTitle("Chat Client");
