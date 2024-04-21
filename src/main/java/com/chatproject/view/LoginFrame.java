@@ -5,7 +5,16 @@
 package com.chatproject.view;
 
 import com.chatproject.controller.LookAndFeelManager;
-import static com.chatproject.view.Login.DEFAULT_LAF;
+import static com.chatproject.controller.LookAndFeelManager.DEFAULT_LAF;
+import java.awt.Component;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Random;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 /**
@@ -13,8 +22,6 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author hungl
  */
 public class LoginFrame extends javax.swing.JFrame {
-    
-    public static String ipv4;
 
     public LoginFrame() {
         initComponents();
@@ -41,11 +48,11 @@ public class LoginFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         registerBtn = new javax.swing.JButton();
         ipv4field = new javax.swing.JTextField();
+        portfield = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setName("frame1"); // NOI18N
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
@@ -64,6 +71,11 @@ public class LoginFrame extends javax.swing.JFrame {
         loginBtn.setText("Đăng nhập");
         loginBtn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         loginBtn.setBorderPainted(false);
+        loginBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginBtnActionPerformed(evt);
+            }
+        });
 
         forgotpassword.setBackground(new java.awt.Color(204, 204, 204));
         forgotpassword.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
@@ -87,6 +99,9 @@ public class LoginFrame extends javax.swing.JFrame {
         registerBtn.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         registerBtn.setText("Đăng ký tài khoản");
         registerBtn.setToolTipText("Tạo tài khoản");
+
+        portfield.setText("12345");
+        portfield.setToolTipText("");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -118,14 +133,18 @@ public class LoginFrame extends javax.swing.JFrame {
                             .addComponent(registerBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(ipv4field, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(ipv4field, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(portfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(ipv4field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ipv4field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(portfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(131, 131, 131)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -164,9 +183,51 @@ public class LoginFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private String generateRandomNumber() {
+            Random rand = new Random();
+            String Guest = "Guest@";
+            int randomNumber = rand.nextInt(90000) + 10000;
+            return String.valueOf(Guest+randomNumber);
+        }
+    
     private void guestLoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guestLoginBtnActionPerformed
         // TODO add your handling code here:
+        String username = generateRandomNumber();
+         if (username != null) {
+        // Tạo một thể hiện mới của MainFrame
+        MainFrame mainFrame = new MainFrame(username);
+
+        // Ẩn cửa sổ đăng nhập
+        this.setVisible(false);
+
+        // Hiển thị cửa sổ MainFrame
+        mainFrame.setVisible(true);
+    } else {
+        // Hiển thị thông báo lỗi nếu đăng nhập không thành công
+        JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không đúng", "Lỗi Đăng Nhập", JOptionPane.ERROR_MESSAGE);
+    }
+       
     }//GEN-LAST:event_guestLoginBtnActionPerformed
+
+    private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
+        // TODO add your handling code here:
+         String username = usernamefield.getText();
+
+    // Nếu đăng nhập thành công
+    if (username != null) {
+        // Tạo một thể hiện mới của MainFrame
+        MainFrame mainFrame = new MainFrame(username);
+
+        // Ẩn cửa sổ đăng nhập
+        this.setVisible(false);
+
+        // Hiển thị cửa sổ MainFrame
+        mainFrame.setVisible(true);
+    } else {
+        // Hiển thị thông báo lỗi nếu đăng nhập không thành công
+        JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không đúng", "Lỗi Đăng Nhập", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_loginBtnActionPerformed
     
     /**
      * @param args the command line arguments
@@ -201,6 +262,7 @@ public class LoginFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JButton loginBtn;
     private javax.swing.JPasswordField passwordfield;
+    private javax.swing.JTextField portfield;
     private javax.swing.JButton registerBtn;
     private javax.swing.JLabel syntaxlabel;
     private javax.swing.JTextField usernamefield;
