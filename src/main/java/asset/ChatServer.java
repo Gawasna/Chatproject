@@ -3,86 +3,41 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package asset;
-
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ChatServer {
-    private static final int PORT = 12345;
-    private static Map<String, PrintWriter> clientWriters = new HashMap<>();
+    private Set<ClientHandler> clients = new HashSet<>();
 
-    public static void main(String[] args) {
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            System.out.println("Server is running...");
-            while (true) {
-                new ClientHandler(serverSocket.accept()).start();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void start(int port) throws IOException {
+        ServerSocket serverSocket = new ServerSocket(1234);
+        System.out.println("Chat server started on port " + port);
+
+        while (true) {
+            Socket socket = serverSocket.accept();
+            ClientHandler clientHandler = new ClientHandler(socket, this);
+            clients.add(clientHandler);
+            new Thread(clientHandler).start();
         }
     }
 
-    private static class ClientHandler extends Thread {
-        private Socket socket;
-        private PrintWriter writer;
-        private String username;
+    public void addClient(ClientHandler client) {
+        clients.add(client);
+    }
 
-        public ClientHandler(Socket socket) {
-            this.socket = socket;
-        }
+    public void removeClient(ClientHandler client) {
+        clients.remove(client);
+    }
 
-        public void run() {
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                writer = new PrintWriter(socket.getOutputStream(), true);
-
-                writer.println("Enter your username:");
-                username = reader.readLine();
-
-                synchronized (clientWriters) {
-                    clientWriters.put(username, writer);
-                    broadcastUserList();
-                }
-
-                broadcast(username + " has joined the chat");
-
-                String message;
-                while ((message = reader.readLine()) != null) {
-                    broadcast(username + ": " + message);
-                }
-            } catch (IOException e) {
-                System.out.println(username + " has left the chat");
-            } finally {
-                if (username != null) {
-                    clientWriters.remove(username);
-                    broadcastUserList();
-                    broadcast(username + " has left the chat");
-                }
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    public ClientHandler getClientByUsername(String username) {
+        for (ClientHandler client : clients) {
+            if (client.getUsername().equals(username)) {
+                return client;
             }
         }
-
-        private void broadcast(String message) {
-            synchronized (clientWriters) {
-                for (PrintWriter writer : clientWriters.values()) {
-                    writer.println(message);
-                }
-            }
-        }
-
-        private void broadcastUserList() {
-            StringBuilder userList = new StringBuilder("USERLIST:");
-            synchronized (clientWriters) {
-                for (String user : clientWriters.keySet()) {
-                    userList.append(user).append(",");
-                }
-            }
-            broadcast(userList.toString());
-        }
+        return null;
     }
 }

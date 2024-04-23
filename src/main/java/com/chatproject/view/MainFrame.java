@@ -5,17 +5,25 @@ import com.chatproject.controller.LookAndFeelManager;
 import static com.chatproject.controller.LookAndFeelManager.DEFAULT_LAF;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class MainFrame extends javax.swing.JFrame {
 private String loggedInUsername;
+private DefaultListModel<String> userListModel = new DefaultListModel<>();
+private BufferedReader reader;
+private PrintWriter writer;
     public MainFrame(String username) {
         initComponents();
         this.loggedInUsername = username;
@@ -44,16 +52,16 @@ private String loggedInUsername;
         jTextField1 = new PlaceholderTextField("Tìm kiếm");
         jButton3 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        listofDBclient = new javax.swing.JList<>();
+        listofclient = new JList<>(userListModel);
         jSeparator2 = new javax.swing.JSeparator();
         jLabel3 = new javax.swing.JLabel();
         usClient = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jTextField2 = new PlaceholderTextField("Tìm kiếm");
+        contentarea = new javax.swing.JTextArea();
+        messagefield = new PlaceholderTextField("Nhập tin nhắn");
         jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        sendBtn = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -89,36 +97,56 @@ private String loggedInUsername;
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        jLabel1.setText("jLabel1");
+        jLabel1.setText("AVT");
 
-        sendtoclient.setText("jLabel2");
+        sendtoclient.setText("sendtoclient");
 
         jTextField1.setText("");
 
         jButton3.setText("Search");
 
-        jScrollPane1.setViewportView(listofDBclient);
+        listofclient.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listofclientMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(listofclient);
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        jLabel3.setText("jLabel1");
+        jLabel3.setText("AVT");
 
-        usClient.setText("jLabel2");
+        usClient.setText("username");
 
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setRows(5);
-        jTextArea1.setWrapStyleWord(true);
-        jScrollPane2.setViewportView(jTextArea1);
+        contentarea.setColumns(20);
+        contentarea.setLineWrap(true);
+        contentarea.setRows(5);
+        contentarea.setWrapStyleWord(true);
+        jScrollPane2.setViewportView(contentarea);
 
-        jTextField2.setText("");
+        messagefield.setText("");
+        messagefield.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                messagefieldActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("jButton4");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
-        jButton5.setText("Send");
+        sendBtn.setText("Send");
+        sendBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -152,9 +180,9 @@ private String loggedInUsername;
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(messagefield, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(sendBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -192,9 +220,9 @@ private String loggedInUsername;
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(messagefield, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton4)
-                            .addComponent(jButton5))
+                            .addComponent(sendBtn))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -321,10 +349,28 @@ private String loggedInUsername;
         changeLookAndFeel(LookAndFeelManager.WINDOW_CLASSIC_LAF);
     }//GEN-LAST:event_winclassicBtnActionPerformed
 
+    private void sendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendBtnActionPerformed
+        // TODO add your handling code here:
+        messagefieldActionPerformed(evt);
+    }//GEN-LAST:event_sendBtnActionPerformed
+
+    private void messagefieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messagefieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_messagefieldActionPerformed
+
+    private void listofclientMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listofclientMouseClicked
+        // TODO add your handling code here:
+        //chat với người dùng khác
+    }//GEN-LAST:event_listofclientMouseClicked
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+;
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     private void displayLoggedInUser() {
-        usClient.setText(loggedInUsername);
+        usClient.setText("Xin chào, "+loggedInUsername);
     }
-    
+   
     /**
      * @param args the command line arguments
      */
@@ -343,19 +389,19 @@ private String loggedInUsername;
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                //new MainFrame().setVisible(true);
+//                new MainFrame().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea contentarea;
     private javax.swing.JMenuItem githubBtn;
     private javax.swing.JMenuItem issuesBtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
@@ -373,12 +419,12 @@ private String loggedInUsername;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JList<String> listofDBclient;
+    private javax.swing.JList<String> listofclient;
+    private javax.swing.JTextField messagefield;
     private javax.swing.JMenuItem motifBtn;
     private javax.swing.JMenuItem resBtn;
+    private javax.swing.JButton sendBtn;
     private javax.swing.JLabel sendtoclient;
     private javax.swing.JLabel usClient;
     private javax.swing.JMenuItem winclassicBtn;

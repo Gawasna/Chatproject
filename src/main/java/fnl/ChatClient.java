@@ -79,7 +79,7 @@ public class ChatClient extends JFrame {
                 String password = new String(passwordField.getPassword());
                 if (!username.isEmpty() && !password.isEmpty()) {
                     try {
-                        socket = new Socket("localhost", 12345);
+                        socket = new Socket( "192.168.11.109", 12345);
                         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                         writer = new PrintWriter(socket.getOutputStream(), true);
 
@@ -158,7 +158,7 @@ public class ChatClient extends JFrame {
                             String sender = parts[0].substring(1);
                             String content = parts[1];
 
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
                             String timeStamp = dateFormat.format(new Date());
 
                             contentChat.append("@" + sender + ":\n" + content + "\n");

@@ -3,102 +3,120 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package asset;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Scanner;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 
 public class ChatClient {
-    private BufferedReader reader;
-    private PrintWriter writer;
-    private JFrame frame = new JFrame("Chat Client");
-    private JTextField textField = new JTextField(40);
-    private JTextArea textArea = new JTextArea(8, 40);
-    private DefaultListModel<String> userListModel = new DefaultListModel<>();
-    private JList<String> userList = new JList<>(userListModel);
+    private Socket socket;
+    private PrintWriter out;
+    private JList<String> clientList;
+    private DefaultListModel<String> clientListModel;
+    private String conversationPartner;
 
-    public ChatClient() {
-        textArea.setEditable(false);
-        frame.getContentPane().setLayout(new BorderLayout());
-        frame.getContentPane().add(textField, BorderLayout.SOUTH);
-        frame.getContentPane().add(new JScrollPane(textArea), BorderLayout.CENTER);
-        frame.getContentPane().add(new JScrollPane(userList), BorderLayout.EAST);
-        frame.pack();
+    public ChatClient(String serverAddress, int serverPort) {
+        try {
+            socket = new Socket(serverAddress, serverPort);
+            out = new PrintWriter(socket.getOutputStream(), true);
 
-        textField.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String message = textField.getText();
-                if (userList.getSelectedIndex() != -1) {
-                    String selectedUser = userList.getSelectedValue();
-                    message = "@" + selectedUser + ":" + message;
+            Thread inputThread = new Thread(() -> {
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+                    String message;
+                    while ((message = in.readLine()) != null) {
+                        System.out.println("Received message: " + message);
+                        handleMessage(message);
+                    }
+                } catch (IOException e) {
+                    System.err.println("Error handling server message: " + e.getMessage());
                 }
-                writer.println(message);
-                textField.setText("");
-            }
-        });
+            });
+            inputThread.start();
 
-        userList.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-                JList<String> list = (JList<String>) evt.getSource();
-                if (evt.getClickCount() == 2) {
-                    String selectedUser = list.getSelectedValue();
-                    if (!selectedUser.equals("Tôi")) {
-                        textArea.append("You are now chatting privately with " + selectedUser + "\n");
+            clientListModel = new DefaultListModel<>();
+            clientList = new JList<>(clientListModel);
+            JScrollPane scrollPane = new JScrollPane(clientList);
+            // Add the scroll pane to the GUI
+
+            clientList.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() == 2) {
+                        int index = clientList.locationToIndex(e.getPoint());
+                        String username = clientListModel.getElementAt(index);
+                        if (conversationPartner == null || !conversationPartner.equals(username)) {
+                            if (conversationPartner != null) {
+                                out.println("DESELECT_PARTNER " + conversationPartner);
+                            }
+                            out.println("SELECT_PARTNER " + username);
+                            conversationPartner = username;
+                        }
                     }
                 }
-            }
-        });
-    }
+            });
 
-    private String getUsername() {
-        return JOptionPane.showInputDialog(frame, "Enter your username:");
-    }
-
-    private void run() {
-        String serverAddress = JOptionPane.showInputDialog(frame, "Enter IP Address of the Server:");
-        try {
-            Socket socket = new Socket(serverAddress, 12345);
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            writer = new PrintWriter(socket.getOutputStream(), true);
-
-            while (true) {
-                String line = reader.readLine();
-                if (line.startsWith("Enter your username:")) {
-                    writer.println(getUsername());
-                } else if (line.startsWith("null has left the chat")) {
-                    break;
-                } else if (line.startsWith("USERLIST:")) {
-                    updateUsers(line.substring(9));
+            Scanner scanner = new Scanner(System.in);
+            while (scanner.hasNextLine()) {
+                String message = scanner.nextLine();
+                if (conversationPartner != null) {
+                    out.println("TO: " + conversationPartner + ": " + message);
                 } else {
-                    textArea.append(line + "\n");
+                    out.println("TO: " + message);
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error connecting to server: " + e.getMessage());
         } finally {
-            try {
-                writer.close();
-                reader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            disconnect();
         }
     }
 
-    private void updateUsers(String userListString) {
-        String[] users = userListString.split(",");
-        userListModel.clear();
-        for (String user : users) {
-            userListModel.addElement(user);
+    public void handleMessage(String message) {
+        if (message.startsWith("CLIENT_LIST:")) {
+            String[] parts = message.split(":");
+            clientListModel.clear();
+            for (int i = 1; i < parts.length; i++) {
+                clientListModel.addElement(parts[i]);
+            }
+        } else if (message.startsWith("SELECT_PARTNER:")) {
+            String[] parts = message.split(":");
+            conversationPartner = parts[1];
+        } else if (message.startsWith("DESELECT_PARTNER:")) {
+            conversationPartner = null;
+        } else {
+            System.out.println("Received message: " + message);
+        }
+    }
+
+    private void disconnect() {
+        if (out != null) {
+            out.close();
+        }
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                System.err.println("Error closing client socket: " + e.getMessage());
+            }
         }
     }
 
     public static void main(String[] args) {
-        ChatClient client = new ChatClient();
-        client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        client.frame.setVisible(true);
-        client.run();
+        if (args.length != 2) {
+            System.err.println("Usage: java ChatClient <server address> <server port>");
+            return;
+        }
+
+        String serverAddress = args[0];
+        int serverPort = Integer.parseInt(args[1]);
+
+        ChatClient client = new ChatClient(serverAddress, serverPort);
     }
 }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.chatproject.view;
 
 import com.chatproject.controller.LookAndFeelManager;
@@ -12,6 +8,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -191,42 +192,42 @@ public class LoginFrame extends javax.swing.JFrame {
         }
     
     private void guestLoginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guestLoginBtnActionPerformed
-        // TODO add your handling code here:
-        String username = generateRandomNumber();
-         if (username != null) {
-        // Tạo một thể hiện mới của MainFrame
-        MainFrame mainFrame = new MainFrame(username);
-
-        // Ẩn cửa sổ đăng nhập
-        this.setVisible(false);
-
-        // Hiển thị cửa sổ MainFrame
-        mainFrame.setVisible(true);
-    } else {
-        // Hiển thị thông báo lỗi nếu đăng nhập không thành công
-        JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không đúng", "Lỗi Đăng Nhập", JOptionPane.ERROR_MESSAGE);
-    }
-       
+        //chưa phát triển
     }//GEN-LAST:event_guestLoginBtnActionPerformed
 
+    private boolean checkLogin(String username, String password) {
+                try {
+            String url = "jdbc:mysql://localhost:3306/clientchatdb";
+            String dbUsername = "root";
+            String dbPassword = "";
+            Connection connection = DriverManager.getConnection(url, dbUsername, dbPassword);
+            String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, username);
+            statement.setString(2, password);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                System.out.println("Account Found");
+                return true; 
+            }
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error. Account doesn't exist");
+            return false;
+        }
+            return false;
+        }
+    
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-        // TODO add your handling code here:
-         String username = usernamefield.getText();
-
-    // Nếu đăng nhập thành công
-    if (username != null) {
-        // Tạo một thể hiện mới của MainFrame
-        MainFrame mainFrame = new MainFrame(username);
-
-        // Ẩn cửa sổ đăng nhập
-        this.setVisible(false);
-
-        // Hiển thị cửa sổ MainFrame
-        mainFrame.setVisible(true);
-    } else {
-        // Hiển thị thông báo lỗi nếu đăng nhập không thành công
-        JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không đúng", "Lỗi Đăng Nhập", JOptionPane.ERROR_MESSAGE);
-    }
+        //đăng nhập giả tưởng đừng quan tâm
+        String username = usernamefield.getText();
+        String password = passwordfield.getText();
+        String ipv4 = "192.168.11.109";
+        Client client = new Client(ipv4,12345);
+        MainFrame main = new MainFrame(username);
+        main.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_loginBtnActionPerformed
     
     /**

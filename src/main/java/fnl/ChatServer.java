@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChatServer {
 
@@ -32,7 +34,7 @@ public class ChatServer {
         frame.setVisible(true);
 
         try {
-            ServerSocket serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName("0.0.0.0"));
+            ServerSocket serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName(ipv4()));
             logArea.append("Server started on port " + PORT + "\n");
 
             while (true) {
@@ -48,6 +50,31 @@ public class ChatServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static String ipv4() {
+        String result = null;
+        try {
+            Process process = Runtime.getRuntime().exec("ipconfig");
+            InputStream inputStream = process.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("IPv4 Address")) {
+                    String ipv4Pattern = "(\\d{1,3}\\.){3}\\d{1,3}";
+                    Pattern pattern = Pattern.compile(ipv4Pattern);
+                    Matcher matcher = pattern.matcher(line);
+                    if (matcher.find()) {
+                        result = matcher.group(); 
+                        break; 
+                    }
+                }
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
     
     private static class ClientHandler extends Thread {
@@ -77,7 +104,7 @@ public class ChatServer {
                             String[] parts = loginMessage.split(":");
                             String username = parts[1];
                             String password = parts[2];
-                            if (checkLogin(username, password)) {
+                            if (!checkLogin(username, password)) {
                                 currentUser = new User(username, User.AccountType.DATABASE_LOGIN);
                                 writer.println("login_success:" + currentUser.getUsername());
                                 break;
@@ -102,13 +129,18 @@ public class ChatServer {
                             String[] parts = message.split(" ", 2);
                             String recipient = parts[0].substring(1);
                             String content = parts[1];
+                            broadcastPrivateMessage(currentUser.getUsername(), message);
                             sendMessageToUser(recipient, currentUser.getUsername(), content);
                         } else if (message.equalsIgnoreCase("general chat")) { // General chat
                             broadcastMessage(currentUser.getUsername(), "entered General Chat");
+                        } else {
+                            broadcastMessage(currentUser.getUsername(), message);
                         }
                     } else { // GUEST_LOGIN
                         if (message.equalsIgnoreCase("general chat")) { // General chat
                             broadcastMessage(currentUser.getUsername(), "entered General Chat");
+                        } else {
+                            broadcastMessage(currentUser.getUsername(), message);
                         }
                     }
                 }
@@ -166,6 +198,11 @@ public class ChatServer {
             for (PrintWriter writer : userWriters.values()) {
                 writer.println("@" + sender + ":" + message);
             }
+        }
+        
+        private void broadcastPrivateMessage(String sender, String message) {      
+                sender= currentUser.getUsername();
+                writer.println("@" + sender + ":" + message);
         }
 
         private void sendMessageToUser(String recipient, String sender, String message) {

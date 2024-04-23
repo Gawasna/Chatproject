@@ -40,14 +40,10 @@ public class ServerManager extends javax.swing.JFrame {
     public static final String WINDOW_LAF = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
     private int PORT;
     private static Set<User> users = new HashSet<>();
-    private static Map<String, PrintWriter> userWriters = new HashMap<>();
-    private Map<String, ClientInfo> connectedClients;
-    private DefaultTableModel model;
-    
+    private Set<ClientHandler> clients = new HashSet<>();
+    private static Map<String, PrintWriter> clientWriters = new HashMap<>();
     public ServerManager() {
         initComponents();
-        model = (DefaultTableModel) viewClient.getModel();
-        connectedClients = new HashMap<>();
     }
 
     /**
@@ -244,7 +240,6 @@ public class ServerManager extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
         String text = ipv4field.getText();
             if (!text.isEmpty()) {
                 StringSelection selection = new StringSelection(text);
@@ -279,7 +274,10 @@ public class ServerManager extends javax.swing.JFrame {
             consolearea.append("Server is running on port " + PORT + "\n");
             consolearea.append("Địa chỉ IPv4 : "+ipv4()+"\n");
             while (true) {
-                new ClientHandler(serverSocket.accept()).start();           
+            Socket socket = serverSocket.accept();
+            ClientHandler clientHandler = new ClientHandler(socket, this);
+            clients.add(clientHandler);
+            new Thread(clientHandler).start();          
                 consolearea.append("New client connected...\n");
             }
         } catch (IOException ex) {
@@ -297,10 +295,26 @@ public class ServerManager extends javax.swing.JFrame {
     }//GEN-LAST:event_stopserverBtnActionPerformed
 
     
+    public void addClient(ClientHandler client) {
+        clients.add(client);
+    }
+
+    public void removeClient(ClientHandler client) {
+        clients.remove(client);
+    }
+
+    public ClientHandler getClientByUsername(String username) {
+        for (ClientHandler client : clients) {
+            if (client.getUsername().equals(username)) {
+                return client;
+            }
+        }
+        return null;
+    }
+    
     private String ipv4() {
         String result = null;
         try {
-
             Process process = Runtime.getRuntime().exec("ipconfig");
             InputStream inputStream = process.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -323,326 +337,7 @@ public class ServerManager extends javax.swing.JFrame {
         }
         return result;
     } 
-    
-    /*
-    private static class ClientHandler extends Thread {
-        private Socket socket;
-        private PrintWriter writer;
-        private String username;
-
-        public ClientHandler(Socket socket) {
-            this.socket = socket;
-        }
-
-        public void run() {
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                writer = new PrintWriter(socket.getOutputStream(), true);
-
-                writer.println("Enter your username:");
-                username = reader.readLine();
-
-                synchronized (clientWriters) {
-                    clientWriters.put(username, writer);
-                    broadcastUserList();
-                }
-
-                broadcast(username + " has joined the chat");
-
-                String message;
-                while ((message = reader.readLine()) != null) {
-                    broadcast(username + ": " + message);
-                }
-            } catch (IOException e) {
-                System.out.println(username + " has left the chat");
-            } finally {
-                if (username != null) {
-                    clientWriters.remove(username);
-                    broadcastUserList();
-                    broadcast(username + " has left the chat");
-                }
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        private void broadcast(String message) {
-            synchronized (clientWriters) {
-                for (PrintWriter writer : clientWriters.values()) {
-                    writer.println(message);
-                }
-            }
-        }
-
-        private void broadcastUserList() {
-            StringBuilder userList = new StringBuilder("USERLIST:");
-            synchronized (clientWriters) {
-                for (String user : clientWriters.keySet()) {
-                    userList.append(user).append(",");
-                }
-            }
-            broadcast(userList.toString());
-        }
-    }
-    */
-    
-    private static class ClientHandler extends Thread {
-        private Socket socket;
-        private BufferedReader reader;
-        private PrintWriter writer;
-        private User currentUser;
-
-        public ClientHandler(Socket socket) {
-            this.socket = socket;
-        }
-
-        @Override
-        public void run() {
-            try {
-                reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                writer = new PrintWriter(socket.getOutputStream(), true);
-                
-                while (true) {
-                    String loginMessage = reader.readLine();
-                    if (loginMessage != null) {
-                        if (loginMessage.equals("guest")) {
-                             currentUser = new User("Guest@" + generateRandomNumber(), User.AccountType.GUEST_LOGIN);
-                                writer.println("login_success:" + currentUser.getUsername());
-                                addClient(currentUser.getUsername(), "GUEST_LOGIN"); // Thêm client mới vào danh sách
-                                break;
-                        } else if (loginMessage.startsWith("login:")) {
-                            String[] parts = loginMessage.split(":");
-                        String username = parts[1];
-                        String password = parts[2];
-                        if (checkLogin(username, password)) {
-                            currentUser = new User(username, User.AccountType.ACCOUNT_LOGIN);
-                            writer.println("login_success:" + currentUser.getUsername());
-                            addClient(currentUser.getUsername(), "ACCOUNT_LOGIN"); // Thêm client mới vào danh sách
-                            break;
-                            } else {
-                                writer.println("login_fail");
-                            }
-                        }
-                    }
-                }
-
-                users.add(currentUser);
-                userWriters.put(currentUser.getUsername(), writer);
-                broadcastUserList();
-                
-                String message;
-                while ((message = reader.readLine()) != null) {
-                    if (message.equalsIgnoreCase("exit")) {
-                        break;
-                    }
-                    if (currentUser.getAccountType() == User.AccountType.ACCOUNT_LOGIN) {
-                        if (message.startsWith("@")) { // Direct message
-                            String[] parts = message.split(" ", 2);
-                            String recipient = parts[0].substring(1);
-                            String content = parts[1];
-                            
-                            broadcastPrivateMessage(currentUser.getUsername(), recipient, message);
-                            sendMessageToUser(recipient, currentUser.getUsername(), content);
-                        } else if (message.equalsIgnoreCase("general chat")) { // General chat
-                            broadcastMessage(currentUser.getUsername(), message);
-                            //
-                            sendMessageToAll(currentUser.getUsername(), message);
-                        } else { broadcastMessage(currentUser.getUsername(), message);
-                            //
-                            sendMessageToAll(currentUser.getUsername(), message);} 
-                    } else { // GUEST_LOGIN
-                         // General chat
-                            broadcastMessage(currentUser.getUsername(), message);
-                            //
-                            sendMessageToAll(currentUser.getUsername(), message);
-                            
-                    }
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } finally {
-                if (currentUser != null) {
-                    users.remove(currentUser);
-                    userWriters.remove(currentUser.getUsername());
-                    broadcastUserList();
-                    removeClient(currentUser.getUsername());
-                    //
-                    
-                }
-                try {
-                    socket.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-
-        private boolean checkLogin(String username, String password) {
-                try {
-            String url = "jdbc:mysql://localhost:3306/clientchatdb";
-            String dbUsername = "root";
-            String dbPassword = "";
-            Connection connection = DriverManager.getConnection(url, dbUsername, dbPassword);
-            String query = "SELECT * FROM users WHERE username = ? AND password = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, username);
-            statement.setString(2, password);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                System.out.println("Account Found");
-                return true; 
-            }
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Error. Account doesn't exist");
-            return false;
-        }
-            return false;
-        }
-
-        private void broadcastUserList() {
-            StringBuilder userList = new StringBuilder();
-            for (User user : users) {
-                userList.append(user.getUsername()).append(",");
-            }
-            for (PrintWriter writer : userWriters.values()) {
-                writer.println(userList);
-            }
-        }
-
-        private void broadcastMessage(String sender, String message) {
-            for (PrintWriter writer : userWriters.values()) {
-                writer.println("@" + sender + ":" + message);
-            }
-        }
-        
-        private void broadcastPrivateMessage(String sender, String recipient, String message) {
-            PrintWriter senderWriter = userWriters.get(sender);
-            PrintWriter recipientWriter = userWriters.get(recipient);
-            if (senderWriter != null && recipientWriter != null) {
-                senderWriter.println("@" + recipient + ":" + message);
-                recipientWriter.println("@" + sender + ":" + message);
-            }
-        }
-
-        private void sendMessageToUser(String recipient, String sender, String message) {
-            PrintWriter writer = userWriters.get(recipient);
-            if (writer != null) {
-                writer.println("@" + sender + ":" + message);
-            }
-        }
-        
-        public void sendMessageToAll (String sender , String message) {
-            PrintWriter writer = userWriters.get(message);
-            if (writer != null) {
-                writer.println(sender + ":\n" + message);
-            }
-        }
-
-        private String generateRandomNumber() {
-            Random rand = new Random();
-            String Guest = "Guest@";
-            int randomNumber = rand.nextInt(90000) + 10000;
-            return String.valueOf(Guest+randomNumber);
-        }
-        
-        private void addClient(String username, String type) {    
-            DefaultTableModel model = (DefaultTableModel) viewClient.getModel();
-            model.addRow(new Object[]{username, type, "Đang kết nối", ""});
-    }
-    
-    private void removeClient(String username) {
-        SwingUtilities.invokeLater(() -> {
-            DefaultTableModel model = (DefaultTableModel) viewClient.getModel();
-            for (int i = 0; i < model.getRowCount(); i++) {
-                if (model.getValueAt(i, 0).equals(username)) {
-                    model.removeRow(i);
-                    break;
-                }
-            }
-        });
-    }
-    }
-    
-    public void updateClientInfo(String username, String type, String status) {
-        ClientInfo clientInfo = connectedClients.get(username);
-        if (clientInfo != null) {
-            clientInfo.setType(type);
-            clientInfo.setStatus(status);
-            // Cập nhật thông tin trên bảng
-            updateTable();
-        } else {
-            System.out.println("Client '" + username + "' không tồn tại.");
-        }
-    }
-    
-     private void updateTable() {
-        // Xóa tất cả các dòng trong bảng
-        model.setRowCount(0);
-        // Thêm lại các dòng mới từ danh sách kết nối
-        for (ClientInfo clientInfo : connectedClients.values()) {
-            model.addRow(new Object[]{clientInfo.getUsername(), clientInfo.getType(), clientInfo.getStatus(), ""});
-        }
-    }
-    
-    public void updateClientOnTable(String username, String type, String status) {
-        for (int i = 0; i < model.getRowCount(); i++) {
-            if (model.getValueAt(i, 0).equals(username)) {
-                model.setValueAt(type, i, 1);
-                model.setValueAt(status, i, 2);
-                break;
-            }
-        }
-    }
-    // Phương thức để xóa client khỏi danh sách kết nối
-    
-
-    // Phương thức để lấy thông tin của tất cả các client
-    public Map<String, ClientInfo> getAllClients() {
-        return connectedClients;
-    }
-
-    // Lớp ClientInfo đại diện cho thông tin của một client
-    private static class ClientInfo {
-        private String username;
-        private String type;
-        private String status;
-
-        public ClientInfo(String username, String type, String status) {
-            this.username = username;
-            this.type = type;
-            this.status = status;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public void setStatus(String status) {
-            this.status = status;
-        }
-    }
-    
+       
     /**
      * @param args the command line arguments
      */
