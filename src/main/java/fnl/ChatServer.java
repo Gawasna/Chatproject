@@ -35,7 +35,7 @@ public class ChatServer {
 
         try {
             ServerSocket serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName(ipv4()));
-            logArea.append("Server started on port " + PORT + "\n");
+            logArea.append("Server started on port " + PORT + "\n" + "IP: "+ipv4());
 
             while (true) {
                 //Socket socket = serverSocket.accept();
