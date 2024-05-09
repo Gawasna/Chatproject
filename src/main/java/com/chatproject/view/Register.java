@@ -5,6 +5,8 @@
 package com.chatproject.view;
 
 import com.chatproject.controller.LookAndFeelManager;
+import com.chatproject.model.Model_Register;
+
 import static com.chatproject.view.Login.DEFAULT_LAF;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -69,6 +71,20 @@ public class Register extends javax.swing.JFrame {
         jButton1.setText("Đăng ký");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                String userName=jTextField3.getText().trim();
+            	String password=String.valueOf(jPasswordField1.getPassword());
+            	String confirmPassword = String.valueOf(jPasswordField2.getPassword());
+            	if(userName.equals("")) {
+            		jTextField3.grabFocus();
+            	} else if(password.equals("")) {
+            		jPasswordField1.grabFocus();
+            	} else if(!password.equals(password)) {
+            		jPasswordField1.grabFocus();
+            		
+            	} else {
+            		Model_Register data = new Model_Register(userName,password);
+            		LookAndFeelManager.getInstance().getLoginHandler().register(data);
+            	}
                 jButton1ActionPerformed(evt);
             }
         });

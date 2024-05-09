@@ -20,6 +20,13 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>sql</name>
+			<type>2</type>
+			<location>D:/CodeJava/QLBanSach/sql</location>
+		</link>
+	</linkedResources>
 	<filteredResources>
 		<filter>
 			<id>1713108220761</id>

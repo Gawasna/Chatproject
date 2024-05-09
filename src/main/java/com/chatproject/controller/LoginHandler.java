@@ -3,6 +3,9 @@ package com.chatproject.controller;
 import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+
+import com.chatproject.model.Model_Register;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -71,5 +74,8 @@ public class LoginHandler {
         Random random = new Random();
         int randomNumber = random.nextInt(90000) + 10000;
         return "Guest@" + randomNumber;
+    }
+    public void Register(Model_Register data ) {
+    	
     }
 }

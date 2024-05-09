@@ -36,4 +36,5 @@ public class Client {
             System.err.println("Error closing client: " + e.getMessage());
         }
     }
+    
 }

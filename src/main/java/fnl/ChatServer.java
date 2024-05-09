@@ -152,11 +152,7 @@ public class ChatServer {
             return false;
         }
         //Đăng nhập khách ngẫu nhiên
-        private boolean randomLogin(String username) {
-        	try {
-        		
-        	}
-        }
+       
 
         private void broadcastUserList() {
             StringBuilder userList = new StringBuilder();

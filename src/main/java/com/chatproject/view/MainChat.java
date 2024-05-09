@@ -6,6 +6,8 @@ package com.chatproject.view;
 
 import com.chatproject.controller.Client;
 import com.chatproject.controller.ClientHandler;
+import com.chatproject.service.Service;
+
 import static com.chatproject.view.Login.DEFAULT_LAF;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
@@ -24,6 +26,13 @@ public class MainChat extends javax.swing.JFrame {
      */
     public MainChat() {
         initComponents();
+        init();
+        
+    }
+    private void init() {
+    	ComponentResizer com= new ComponentResizer();
+    	initEvent();
+    	Service.getInstance().startServer();
     }
     /**
      * This method is called from within the constructor to initialize the form.
